@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TinyBrowser
 {
@@ -15,26 +18,34 @@ namespace TinyBrowser
                 TcpClient client = new TcpClient("acme.com", 80);
 
                 var request = "GET / HTTP/1.1\r\nHost: acme.com\r\n\r\n";
-
                 var convertedRequest = Encoding.ASCII.GetBytes(request);
 
                 var stream = client.GetStream();
                 stream.Write(convertedRequest, 0,convertedRequest.Length);
                 Console.WriteLine("SENT");
-
-                Byte[] data = new byte[10000];
-                var response = stream.Read(data, 0, data.Length);
-                var convertedResponse = Encoding.ASCII.GetString(data, 0, response);
                 
-                Console.WriteLine("RESPONSE: " + convertedResponse);
+                var streamReader = new StreamReader(stream);
+                var result = streamReader.ReadToEnd();
+                
+                Console.WriteLine("RESPONSE: " + result);
 
-                var indexA = convertedResponse.IndexOf("<title>") + "<title>".Length;
-                Console.WriteLine("indexA: " + indexA);
-                var indexB = convertedResponse.LastIndexOf("</title>");
-                Console.WriteLine("indexB: " + indexB);
-                var title = convertedResponse.Substring(indexA, indexB - indexA);
+                var indexA = result.IndexOf("<title>") + "<title>".Length;
+                var indexB = result.LastIndexOf("</title>");
+                var title = result.Substring(indexA, indexB - indexA);
                 Console.WriteLine("TITLE: " + title);
-                
+
+                string startOfLink = "<a href =";
+                var links = new List<string>();
+                while (result.Contains(startOfLink))
+                {
+                    indexA = result.IndexOf(startOfLink);
+                    //fixa indexB
+
+                    var link = result.Substring(indexA, indexB - indexA);
+                    links.Add(link);
+                    result.Remove(indexA, indexB - indexA);
+                }
+
                 
 
                 stream.Close();
