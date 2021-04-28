@@ -40,6 +40,17 @@ namespace TinyBrowser
                 {
                     indexA = result.IndexOf(startOfLink);
                     //fixa indexB
+                    indexB = indexA;
+                    for (int i = 1; i != 0;)
+                    {
+                        indexB++;
+                        if (result[indexB].Equals("<") &&
+                            result[indexB +1].Equals("/") &&
+                            result[indexB +2].Equals("a"))
+                        {
+                            i--;
+                        }
+                    }
 
                     var link = result.Substring(indexA, indexB - indexA);
                     links.Add(link);
