@@ -23,41 +23,47 @@ namespace TinyBrowser
                 var stream = client.GetStream();
                 stream.Write(convertedRequest, 0,convertedRequest.Length);
                 Console.WriteLine("SENT");
-                
                 var streamReader = new StreamReader(stream);
                 var result = streamReader.ReadToEnd();
                 
-                Console.WriteLine("RESPONSE: " + result);
+                //Console.WriteLine("RESPONSE: " + result);
+                FindTitle(result);
+                
 
-                var indexA = result.IndexOf("<title>") + "<title>".Length;
-                var indexB = result.LastIndexOf("</title>");
-                var title = result.Substring(indexA, indexB - indexA);
-                Console.WriteLine("TITLE: " + title);
-
-                string startOfLink = "<a href =";
+                string startOfLink = "<a href=";
+                string endOfLink = "</a>";
                 var links = new List<string>();
+                var urls = new List<string>();
+
                 while (result.Contains(startOfLink))
                 {
-                    indexA = result.IndexOf(startOfLink);
-                    //fixa indexB
-                    indexB = indexA;
-                    for (int i = 1; i != 0;)
-                    {
+                    var indexA = result.IndexOf(startOfLink);
+                    var indexB = indexA;
+                    while (result.Substring(indexB, endOfLink.Length) != endOfLink)
                         indexB++;
-                        if (result[indexB].Equals("<") &&
-                            result[indexB +1].Equals("/") &&
-                            result[indexB +2].Equals("a"))
-                        {
-                            i--;
-                        }
-                    }
 
-                    var link = result.Substring(indexA, indexB - indexA);
-                    links.Add(link);
-                    result.Remove(indexA, indexB - indexA);
+                    indexB += endOfLink.Length;
+
+                    var linkSection = result.Substring(indexA, indexB - indexA);
+                    links.Add(linkSection);
+
+                    string quotation = "\"";
+                    var indexC = linkSection.IndexOf(quotation) +1;
+                    var indexD = indexC;
+                    while (linkSection.Substring(indexD, 1) != quotation)
+                        indexD++;
+
+                    var url = linkSection.Substring(indexC, indexD - indexC);
+                    urls.Add(url);
+
+                    result = result.Remove(indexA, indexB - indexA);
                 }
 
-                
+                foreach (var link in links)
+                    Console.WriteLine(link);
+
+                foreach (var url in urls)
+                    Console.WriteLine(url);
 
                 stream.Close();
             }
@@ -70,6 +76,14 @@ namespace TinyBrowser
                 Console.WriteLine(e);
             }
             
+        }
+
+        static void FindTitle(string result)
+        {
+            var indexA = result.IndexOf("<title>") + "<title>".Length;
+            var indexB = result.LastIndexOf("</title>");
+            var title = result.Substring(indexA, indexB - indexA);
+            Console.WriteLine("TITLE: " + title);
         }
     }
 }
