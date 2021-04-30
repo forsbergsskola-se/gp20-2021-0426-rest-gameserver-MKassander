@@ -27,8 +27,9 @@ namespace TinyBrowser
                 var result = streamReader.ReadToEnd();
                 
                 //Console.WriteLine("RESPONSE: " + result);
-                FindTitle(result);
-                
+                var title = FindTitle(result, "<title>", "</title>");
+                Console.WriteLine("TITLE: " + title);
+
 
                 string startOfLink = "<a href=";
                 string endOfLink = "</a>";
@@ -56,6 +57,8 @@ namespace TinyBrowser
                     var url = linkSection.Substring(indexC, indexD - indexC);
                     urls.Add(url);
 
+                    // find display text  => from > => to </a>
+                    
                     result = result.Remove(indexA, indexB - indexA);
                 }
 
@@ -78,13 +81,12 @@ namespace TinyBrowser
             
         }
 
-        static void FindTitle(string result)
+        static string FindTitle(string result, string startTerm, string endTerm)
         {
-            var indexA = result.IndexOf("<title>") + "<title>".Length;
-            var indexB = result.LastIndexOf("</title>");
+            var indexA = result.IndexOf(startTerm) + startTerm.Length;
+            var indexB = result.LastIndexOf(endTerm);
             var title = result.Substring(indexA, indexB - indexA);
-            Console.WriteLine("TITLE: " + title);
+            return title;
         }
     }
 }
-//"acme.com", 80
