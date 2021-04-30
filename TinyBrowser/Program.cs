@@ -13,50 +13,54 @@ namespace TinyBrowser
     {
         static void Main()
         {
-            try
-            {
-                TcpClient client = new TcpClient("acme.com", 80);
-                var request = "GET / HTTP/1.1\r\nHost: acme.com\r\n\r\n";
-                var convertedRequest = Encoding.ASCII.GetBytes(request);
-
-                var stream = client.GetStream();
-                stream.Write(convertedRequest, 0,convertedRequest.Length);
-                var streamReader = new StreamReader(stream);
-                var result = streamReader.ReadToEnd();
-                
-                var title = FindTitle(result, "<title>", "</title>");
-                Console.WriteLine("TITLE: " + title);
-                
-                string startOfLink = "<a href=";
-                string endOfLink = "</a>";
-                var links = new List<string>();
-                var urls = new List<string>();
-                var displayTexts = new List<string>();
-
-                SeparateDesiredStrings(result, startOfLink, endOfLink, links,urls, displayTexts);
-
-                PrintLists(links,displayTexts,urls);
-
-                Console.WriteLine("Enter a number corresponding to the page you want to visit:");
-                var input= Console.ReadLine();
-                
-                if (int.TryParse(input, out int parsedInput) && 
-                    parsedInput >= 0 && parsedInput <= links.Count)
-                {
-                    request += urls[parsedInput];
-                }else Console.WriteLine("Invalid input!");
-
-                stream.Close();
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e);
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine(e);
-            }
+            var request = "GET / HTTP/1.1\r\nHost: acme.com\r\n\r\n";
             
+            while (true)
+            {
+                try
+                {
+                    TcpClient client = new TcpClient("acme.com", 80);
+                    var convertedRequest = Encoding.ASCII.GetBytes(request);
+
+                    var stream = client.GetStream();
+                    stream.Write(convertedRequest, 0,convertedRequest.Length);
+                    Console.WriteLine("Request: " + request);
+                    var streamReader = new StreamReader(stream);
+                    var result = streamReader.ReadToEnd();
+                
+                    var title = FindTitle(result, "<title>", "</title>");
+                    Console.WriteLine("TITLE: " + title);
+                
+                    string startOfLink = "<a href=";
+                    string endOfLink = "</a>";
+                    var links = new List<string>();
+                    var urls = new List<string>();
+                    var displayTexts = new List<string>();
+
+                    SeparateDesiredStrings(result, startOfLink, endOfLink, links,urls, displayTexts);
+
+                    PrintLists(links,displayTexts,urls);
+
+                    Console.WriteLine("Enter a number corresponding to the page you want to visit:");
+                    var input= Console.ReadLine();
+                
+                    if (int.TryParse(input, out int parsedInput) && 
+                        parsedInput >= 0 && parsedInput <= links.Count)
+                    {
+                        request += urls[parsedInput];
+                    }else Console.WriteLine("Invalid input!");
+
+                    stream.Close();
+                }
+                catch (ArgumentNullException e)
+                {
+                    Console.WriteLine(e);
+                }
+                catch (SocketException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
         }
 
         static string FindTitle(string result, string startTerm, string endTerm)
