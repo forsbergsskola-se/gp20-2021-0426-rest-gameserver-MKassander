@@ -35,6 +35,7 @@ namespace TinyBrowser
                 string endOfLink = "</a>";
                 var links = new List<string>();
                 var urls = new List<string>();
+                var displayTexts = new List<string>();
 
                 while (result.Contains(startOfLink))
                 {
@@ -58,15 +59,20 @@ namespace TinyBrowser
                     urls.Add(url);
 
                     // find display text  => from > => to </a>
+                    var indexE = linkSection.IndexOf(">") +1;
+                    var indexF = indexE;
+                    while (linkSection.Substring(indexF, endOfLink.Length) != endOfLink)
+                        indexF++;
+                    var displayText = linkSection.Substring(indexE, indexF - indexE);
+                    displayTexts.Add(displayText);
                     
                     result = result.Remove(indexA, indexB - indexA);
                 }
 
-                foreach (var link in links)
-                    Console.WriteLine(link);
-
-                foreach (var url in urls)
-                    Console.WriteLine(url);
+                for (int i = 0; i < links.Count; i++)
+                {
+                    Console.WriteLine($"{i}: {displayTexts[i]} ({urls[i]})");
+                }
 
                 stream.Close();
             }
