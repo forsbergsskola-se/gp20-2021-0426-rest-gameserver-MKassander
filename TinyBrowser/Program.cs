@@ -47,7 +47,7 @@ namespace TinyBrowser
                     if (int.TryParse(input, out int parsedInput) && 
                         parsedInput >= 0 && parsedInput <= links.Count)
                     {
-                        request += urls[parsedInput];
+                        request += urls[parsedInput]; // behövs ändras om man trycker fler ggr(?)
                     }else Console.WriteLine("Invalid input!");
 
                     stream.Close();
