@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace TinyBrowser
 {
@@ -13,12 +10,16 @@ namespace TinyBrowser
     {
         static void Main()
         {
-            var request = "GET / HTTP/1.1\r\nHost: acme.com\r\n\r\n";
+            var acme = "acme.com";
+            var hostName = acme;
+            
+            
             
             while (true)
             {
                 try
                 {
+                    var request = "GET / HTTP/1.1\r\nHost: " + hostName + "\r\n\r\n";
                     TcpClient client = new TcpClient("acme.com", 80);
                     var convertedRequest = Encoding.ASCII.GetBytes(request);
 
@@ -47,7 +48,7 @@ namespace TinyBrowser
                     if (int.TryParse(input, out int parsedInput) && 
                         parsedInput >= 0 && parsedInput <= links.Count)
                     {
-                        request += urls[parsedInput]; // behövs ändras om man trycker fler ggr(?)
+                        hostName = acme + "/" + urls[parsedInput]; // behövs ändras om man trycker fler ggr(?)
                     }else Console.WriteLine("Invalid input!");
 
                     stream.Close();
