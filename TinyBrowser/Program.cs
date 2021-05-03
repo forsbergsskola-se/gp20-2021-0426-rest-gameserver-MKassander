@@ -12,9 +12,7 @@ namespace TinyBrowser
         {
             var acme = "acme.com";
             var hostName = acme;
-            
-            
-            
+
             while (true)
             {
                 try
@@ -48,7 +46,7 @@ namespace TinyBrowser
                     if (int.TryParse(input, out int parsedInput) && 
                         parsedInput >= 0 && parsedInput <= links.Count)
                     {
-                        hostName = acme + "/" + urls[parsedInput]; // behövs ändras om man trycker fler ggr(?)
+                        hostName = acme + "/" + urls[parsedInput]; //
                     }else Console.WriteLine("Invalid input!");
 
                     stream.Close();
