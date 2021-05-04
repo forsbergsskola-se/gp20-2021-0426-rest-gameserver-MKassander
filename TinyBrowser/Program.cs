@@ -13,6 +13,9 @@ namespace TinyBrowser
             var host = "acme.com";
             var requestAddend = "";
 
+            List<string> visitedLinks = new List<string>();
+            int visitedIndex = 0;
+
             while (true)
             {
                 try
@@ -20,6 +23,8 @@ namespace TinyBrowser
                     var request = "GET /" + requestAddend + " HTTP/1.1\r\nHost: " + host + "\r\n\r\n";
                     TcpClient client = new TcpClient(host, 80);
                     var convertedRequest = Encoding.ASCII.GetBytes(request);
+                    
+                    visitedLinks.Add(requestAddend);
 
                     var stream = client.GetStream();
                     stream.Write(convertedRequest, 0,convertedRequest.Length);
@@ -40,10 +45,15 @@ namespace TinyBrowser
 
                     PrintLists(links,displayTexts,urls);
 
+                    Console.WriteLine("Type \"b\" to return");
                     Console.WriteLine("Enter a number corresponding to the page you want to visit:");
                     var input= Console.ReadLine();
-                
-                    if (int.TryParse(input, out int parsedInput) && 
+
+                    if (input == "b" && visitedIndex -1 >= 0)
+                    {
+                        requestAddend = visitedLinks[visitedIndex -1];
+                    }
+                    else if (int.TryParse(input, out int parsedInput) && 
                         parsedInput >= 0 && parsedInput <= links.Count)
                     {
                         if (urls[parsedInput].StartsWith("http:"))
@@ -53,9 +63,13 @@ namespace TinyBrowser
                                 index++;
                             host = urls[index].Substring("http://www.".Length, index);
                             requestAddend = urls[index].Substring(index, urls[index].Length);
-                        }else 
+                            visitedIndex++;
+                        }
+                        else
+                        {
                             requestAddend = urls[parsedInput];
-                        
+                            visitedIndex++;
+                        }
                     }else Console.WriteLine("Invalid input!");
 
                     stream.Close();
