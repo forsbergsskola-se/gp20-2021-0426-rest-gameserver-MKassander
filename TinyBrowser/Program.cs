@@ -10,15 +10,15 @@ namespace TinyBrowser
     {
         static void Main()
         {
-            var acme = "acme.com";
+            var host = "acme.com";
             var requestAddend = "";
 
             while (true)
             {
                 try
                 {
-                    var request = "GET /" + requestAddend + " HTTP/1.1\r\nHost: " + acme + "\r\n\r\n";
-                    TcpClient client = new TcpClient(acme, 80);
+                    var request = "GET /" + requestAddend + " HTTP/1.1\r\nHost: " + host + "\r\n\r\n";
+                    TcpClient client = new TcpClient(host, 80);
                     var convertedRequest = Encoding.ASCII.GetBytes(request);
 
                     var stream = client.GetStream();
@@ -46,7 +46,16 @@ namespace TinyBrowser
                     if (int.TryParse(input, out int parsedInput) && 
                         parsedInput >= 0 && parsedInput <= links.Count)
                     {
-                        requestAddend = urls[parsedInput]; //
+                        if (urls[parsedInput].StartsWith("http:"))
+                        {
+                            var index = "http://www.".Length +1;
+                            while (!urls[index].Equals("."))
+                                index++;
+                            host = urls[index].Substring("http://www.".Length, index);
+                            requestAddend = urls[index].Substring(index, urls[index].Length);
+                        }else 
+                            requestAddend = urls[parsedInput];
+                        
                     }else Console.WriteLine("Invalid input!");
 
                     stream.Close();
@@ -111,7 +120,8 @@ namespace TinyBrowser
                 {
                     Console.WriteLine($"{i}: Image ()");
                     urlList[i] = "";
-                }else Console.WriteLine($"{i}: {displayTextList[i]} ({urlList[i]})");
+                }
+                else Console.WriteLine($"{i}: {displayTextList[i]} ({urlList[i]})");
             }
         }
     }
