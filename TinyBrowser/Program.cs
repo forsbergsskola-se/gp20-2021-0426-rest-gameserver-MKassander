@@ -121,7 +121,16 @@ namespace TinyBrowser
                     Console.WriteLine($"{i}: Image ()");
                     urlList[i] = "";
                 }
-                else Console.WriteLine($"{i}: {displayTextList[i]} ({urlList[i]})");
+                else
+                {
+                    if (urlList[i].Length > 15)
+                    {
+                        Console.WriteLine($"{i}: {displayTextList[i]} " +
+                                          $"({urlList[i].Substring(0, 6)}..." +
+                                          $"{urlList[i].Substring(urlList[i].Length-6, 6)})");
+                    }else 
+                        Console.WriteLine($"{i}: {displayTextList[i]} ({urlList[i]})");
+                }
             }
         }
     }
