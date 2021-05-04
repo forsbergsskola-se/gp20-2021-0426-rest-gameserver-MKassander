@@ -45,13 +45,19 @@ namespace TinyBrowser
 
                     PrintLists(links,displayTexts,urls);
 
-                    Console.WriteLine("Type \"b\" to return");
+                    Console.WriteLine("Type \"b\" to return, \"f\" to go forward");
                     Console.WriteLine("Enter a number corresponding to the page you want to visit:");
                     var input= Console.ReadLine();
 
                     if (input == "b" && visitedIndex -1 >= 0)
                     {
                         requestAddend = visitedLinks[visitedIndex -1];
+                        visitedIndex--;
+                    }
+                    else if (input == "f" && visitedIndex +1 <= visitedLinks.Count)
+                    {
+                        requestAddend = visitedLinks[visitedIndex +1];
+                        visitedIndex++;
                     }
                     else if (int.TryParse(input, out int parsedInput) && 
                         parsedInput >= 0 && parsedInput <= links.Count)
