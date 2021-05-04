@@ -49,7 +49,7 @@ namespace TinyBrowser
 
                     PrintLists(links,displayTexts,urls);
 
-                    Console.WriteLine("Type \"b\" to return, \"f\" to go forward, \"f\" to refresh");
+                    Console.WriteLine("Type \"b\" to return, \"f\" to go forward, \"f\" to refresh, or \"h\" to view history");
                     Console.WriteLine("Enter a number corresponding to the page you want to visit:");
                     var input= Console.ReadLine();
 
@@ -65,6 +65,13 @@ namespace TinyBrowser
                     }
                     else if (input == "r")
                         refresh = true;
+                    else if (input == "h")
+                    {
+                        foreach (var link in visitedLinks)
+                        {
+                            Console.WriteLine(link);
+                        }
+                    }
                     else if (int.TryParse(input, out int parsedInput) && 
                         parsedInput >= 0 && parsedInput <= links.Count)
                     {
