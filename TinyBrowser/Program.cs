@@ -15,6 +15,7 @@ namespace TinyBrowser
 
             List<string> visitedLinks = new List<string>();
             int visitedIndex = 0;
+            bool refresh = false;
 
             while (true)
             {
@@ -23,8 +24,11 @@ namespace TinyBrowser
                     var request = "GET /" + requestAddend + " HTTP/1.1\r\nHost: " + host + "\r\n\r\n";
                     TcpClient client = new TcpClient(host, 80);
                     var convertedRequest = Encoding.ASCII.GetBytes(request);
+
+                    if (!refresh)
+                        visitedLinks.Add(requestAddend);
+                    refresh = false;
                     
-                    visitedLinks.Add(requestAddend);
 
                     var stream = client.GetStream();
                     stream.Write(convertedRequest, 0,convertedRequest.Length);
@@ -45,7 +49,7 @@ namespace TinyBrowser
 
                     PrintLists(links,displayTexts,urls);
 
-                    Console.WriteLine("Type \"b\" to return, \"f\" to go forward");
+                    Console.WriteLine("Type \"b\" to return, \"f\" to go forward, \"f\" to refresh");
                     Console.WriteLine("Enter a number corresponding to the page you want to visit:");
                     var input= Console.ReadLine();
 
@@ -59,6 +63,8 @@ namespace TinyBrowser
                         requestAddend = visitedLinks[visitedIndex +1];
                         visitedIndex++;
                     }
+                    else if (input == "r")
+                        refresh = true;
                     else if (int.TryParse(input, out int parsedInput) && 
                         parsedInput >= 0 && parsedInput <= links.Count)
                     {
