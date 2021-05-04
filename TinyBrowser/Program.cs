@@ -11,14 +11,14 @@ namespace TinyBrowser
         static void Main()
         {
             var acme = "acme.com";
-            var hostName = acme;
+            var requestAddend = "";
 
             while (true)
             {
                 try
                 {
-                    var request = "GET / HTTP/1.1\r\nHost: " + hostName + "\r\n\r\n";
-                    TcpClient client = new TcpClient("acme.com", 80);
+                    var request = "GET /" + requestAddend + " HTTP/1.1\r\nHost: " + acme + "\r\n\r\n";
+                    TcpClient client = new TcpClient(acme, 80);
                     var convertedRequest = Encoding.ASCII.GetBytes(request);
 
                     var stream = client.GetStream();
@@ -46,7 +46,7 @@ namespace TinyBrowser
                     if (int.TryParse(input, out int parsedInput) && 
                         parsedInput >= 0 && parsedInput <= links.Count)
                     {
-                        hostName = acme + "/" + urls[parsedInput]; //
+                        requestAddend = urls[parsedInput]; //
                     }else Console.WriteLine("Invalid input!");
 
                     stream.Close();
