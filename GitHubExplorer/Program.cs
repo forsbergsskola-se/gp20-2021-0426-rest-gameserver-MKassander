@@ -13,13 +13,13 @@ namespace GitHubExplorer
             while (true)
             {
                 HttpClient client = new HttpClient();
-                client.DefaultRequestHeaders.Add("GitHubExplorer", "1.0");
+                client.DefaultRequestHeaders.Add("Authorization", token);
                 
                 Console.WriteLine("Enter username");
                 var input = Console.ReadLine();
-                var baseUrl = "https//api.github.com/users/";
-                var requestUrl = baseUrl + input;
-                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+                client.BaseAddress = new Uri("https//api.github.com/users/");
+                //var requestUrl = baseUrl + input;
+                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Get, input);
                 client.Send(requestMessage);
 
 
