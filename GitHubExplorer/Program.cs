@@ -42,22 +42,24 @@ namespace GitHubExplorer
                 Console.WriteLine("Enter username");
                 var input = Console.ReadLine();
                 
-                var task = UserFromGit(input, client);
-                task.Wait();
+                var userTask = GetFromGit(input, client, false);
+                userTask.Wait();
                 
                 Console.WriteLine("Enter \"1\" to go to repositories");
                 Console.WriteLine("Enter any other input to exit");
                 input = Console.ReadLine();
                 if (input == "1")
                 {
-                    
+                    var url = input + "/repos";
+                    var repoTask = GetFromGit(url, client, true);
+                    repoTask.Wait();
                 }
                 Console.WriteLine("Closing client.");
                 client.Dispose();
             }
         }
 
-        static async Task UserFromGit(string input, HttpClient client)
+        static async Task GetFromGit(string input, HttpClient client, bool repos)
         {
             var response = await client.GetAsync(input);
             response.EnsureSuccessStatusCode();
@@ -66,14 +68,9 @@ namespace GitHubExplorer
             var streamReader = new StreamReader(stream);
             var responseString = await streamReader.ReadToEndAsync();
 
+            //
             var userResponse = JsonSerializer.Deserialize<UserResponse>(responseString);
             
-
-            
-            Separator();
-            Console.WriteLine(response);
-            Separator();
-            Console.WriteLine(responseString);
             Separator();
             userResponse.PrintFields();
             Separator();
