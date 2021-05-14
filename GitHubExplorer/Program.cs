@@ -3,10 +3,15 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace GitHubExplorer
 {
+    public class UserResponse
+    {
+        
+    }
     class Program
     {
         static string separatorString = "*******";
@@ -37,7 +42,13 @@ namespace GitHubExplorer
         {
             var response = await client.GetAsync(input);
             response.EnsureSuccessStatusCode();
-            var body = await response.Content.ReadAsStringAsync();
+            var stream = await response.Content.ReadAsStreamAsync();
+
+            var streamReader = new StreamReader(stream);
+            var responseString = streamReader.ReadToEndAsync();
+            Console.WriteLine(responseString);
+
+            var UserResponse = await JsonSerializer.DeserializeAsync<UserResponse>(stream);
 
             Separator();
             Console.WriteLine(response);
