@@ -27,6 +27,7 @@ namespace GitHubExplorer
                     (new ProductInfoHeaderValue("GithubExplorer", "1.0"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue
                     ("token", token);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 
                 Console.WriteLine("Enter username");
                 var input = Console.ReadLine();
@@ -47,7 +48,8 @@ namespace GitHubExplorer
             var streamReader = new StreamReader(stream);
             var responseString = await streamReader.ReadToEndAsync();
 
-            //var UserResponse = await JsonSerializer.DeserializeAsync<UserResponse>(stream);
+            var userResponse = JsonSerializer.Deserialize<UserResponse>(responseString);
+            //var user = new UserResponse(userResponse);
 
             Separator();
             Console.WriteLine(response);
