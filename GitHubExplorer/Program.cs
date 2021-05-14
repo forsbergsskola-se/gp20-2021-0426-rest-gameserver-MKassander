@@ -45,15 +45,14 @@ namespace GitHubExplorer
             var stream = await response.Content.ReadAsStreamAsync();
 
             var streamReader = new StreamReader(stream);
-            var responseString = streamReader.ReadToEndAsync();
-            Console.WriteLine(responseString);
+            var responseString = await streamReader.ReadToEndAsync();
 
-            var UserResponse = await JsonSerializer.DeserializeAsync<UserResponse>(stream);
+            //var UserResponse = await JsonSerializer.DeserializeAsync<UserResponse>(stream);
 
             Separator();
             Console.WriteLine(response);
             Separator();
-            Console.WriteLine(body);
+            Console.WriteLine(responseString);
             Separator();
         }
 
