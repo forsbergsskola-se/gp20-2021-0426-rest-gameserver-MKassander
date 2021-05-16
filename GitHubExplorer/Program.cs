@@ -30,6 +30,11 @@ namespace GitHubExplorer
             Console.ResetColor();
         }
     }
+
+    public class UserRepos
+    {
+        
+    }
     class Program
     {
         static string separatorString = "*******";
@@ -69,10 +74,18 @@ namespace GitHubExplorer
             var responseString = await streamReader.ReadToEndAsync();
 
             //
-            var userResponse = JsonSerializer.Deserialize<UserResponse>(responseString);
+            if (repos)
+            {
+                var userResponse = JsonSerializer.Deserialize<UserResponse>(responseString); // till ny class
+            }
+            else
+            {
+                var userResponse = JsonSerializer.Deserialize<UserResponse>(responseString);
+            }
+            
             
             Separator();
-            userResponse.PrintFields();
+            //userResponse.PrintFields(); // ändra
             Separator();
         }
 
