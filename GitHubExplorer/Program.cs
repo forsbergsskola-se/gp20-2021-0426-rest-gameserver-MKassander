@@ -76,17 +76,20 @@ namespace GitHubExplorer
             //
             if (repos)
             {
-                var userResponse = JsonSerializer.Deserialize<UserResponse>(responseString); // till ny class
+                //var userResponse = JsonSerializer.Deserialize<UserResponse>(responseString); // till ny class
+                Separator();
+                Separator();
+                Console.WriteLine(responseString);
+                Separator();
+                Separator();
             }
             else
             {
                 var userResponse = JsonSerializer.Deserialize<UserResponse>(responseString);
+                Separator();
+                userResponse.PrintFields();
+                Separator();
             }
-            
-            
-            Separator();
-            //userResponse.PrintFields(); // ändra
-            Separator();
         }
 
         static void Separator()
