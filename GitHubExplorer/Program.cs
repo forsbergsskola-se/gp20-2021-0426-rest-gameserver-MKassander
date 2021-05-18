@@ -35,15 +35,15 @@ namespace GitHubExplorer
     public class UserRepos
     {
         public string name { get; set; }
-        public string Description { get; set; }
-        public DateTime LastPushUtc { get; set; }
-        public DateTime LastPush => LastPushUtc.ToLocalTime();
+        public string description { get; set; }
+        public DateTime pushed_at { get; set; }
+        public DateTime LastPush => pushed_at.ToLocalTime();
         
         public void PrintFields()
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Name: " + name);
-            Console.WriteLine("Description: " + Description);
+            Console.WriteLine("Description: " + description);
             Console.WriteLine("Last push: " + LastPush);
             Console.ResetColor();
         }
@@ -88,6 +88,7 @@ namespace GitHubExplorer
 
             if (repos)
             {
+                Console.WriteLine(responseString);
                 var userResponse = JsonSerializer.Deserialize<List<UserRepos>>(responseString);
                 Separator(ConsoleColor.Yellow);
                 foreach (var repo in userResponse)
