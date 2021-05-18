@@ -8,46 +8,6 @@ using System.Threading.Tasks;
 
 namespace GitHubExplorer
 {
-    public class UserResponse
-    {
-        public string name { get; set; }
-        public string company { get; set; }
-        public string location { get; set; }
-        public string email { get; set; }
-        public string bio { get; set; }
-        public int public_repos { get; set; }
-        public int private_Repos { get; set; }
-
-        public void PrintFields()
-        {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Name: " + name);
-            Console.WriteLine("Company: " + company);
-            Console.WriteLine("Bio: " + bio);
-            Console.WriteLine("Location: " + location);
-            Console.WriteLine("Private repos: " + private_Repos);
-            Console.WriteLine("public repos: " + public_repos);
-            Console.WriteLine("Email: " + email);
-            Console.ResetColor();
-        }
-    }
-
-    public class UserRepos
-    {
-        public string name { get; set; }
-        public string description { get; set; }
-        public DateTime pushed_at { get; set; }
-        public DateTime LastPush => pushed_at.ToLocalTime();
-        
-        public void PrintFields()
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Name: " + name);
-            Console.WriteLine("Description: " + description);
-            Console.WriteLine("Last push: " + LastPush);
-            Console.ResetColor();
-        }
-    }
     class Program
     {
         static string separatorString = "*******";
@@ -89,9 +49,9 @@ namespace GitHubExplorer
             if (repos)
             {
                 Console.WriteLine(responseString);
-                var userResponse = JsonSerializer.Deserialize<List<UserRepos>>(responseString);
+                var userRepos = JsonSerializer.Deserialize<List<UserRepos>>(responseString);
                 Separator(ConsoleColor.Yellow);
-                foreach (var repo in userResponse)
+                foreach (var repo in userRepos)
                     repo.PrintFields();
                 Separator(ConsoleColor.Yellow);
             }
