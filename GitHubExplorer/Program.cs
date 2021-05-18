@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -33,7 +34,19 @@ namespace GitHubExplorer
 
     public class UserRepos
     {
+        public string name { get; set; }
+        public string Description { get; set; }
+        public DateTime LastPushUtc { get; set; }
+        public DateTime LastPush => LastPushUtc.ToLocalTime();
         
+        public void PrintFields()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Name: " + name);
+            Console.WriteLine("Description: " + Description);
+            Console.WriteLine("Last push: " + LastPush);
+            Console.ResetColor();
+        }
     }
     class Program
     {
@@ -45,17 +58,17 @@ namespace GitHubExplorer
                 var client = SetUp();
                 
                 Console.WriteLine("Enter username");
-                var input = Console.ReadLine();
+                var firstInput = Console.ReadLine();
                 
-                var userTask = GetFromGit(input, client, false);
+                var userTask = GetFromGit(firstInput, client, false);
                 userTask.Wait();
                 
                 Console.WriteLine("Enter \"1\" to go to repositories");
                 Console.WriteLine("Enter any other input to exit");
-                input = Console.ReadLine();
-                if (input == "1")
+                var secondInput = Console.ReadLine();
+                if (secondInput == "1")
                 {
-                    var url = input + "/repos";
+                    var url = firstInput + "/repos";
                     var repoTask = GetFromGit(url, client, true);
                     repoTask.Wait();
                 }
@@ -73,28 +86,26 @@ namespace GitHubExplorer
             var streamReader = new StreamReader(stream);
             var responseString = await streamReader.ReadToEndAsync();
 
-            //
             if (repos)
             {
-                //var userResponse = JsonSerializer.Deserialize<UserResponse>(responseString); // till ny class
-                Separator();
-                Separator();
-                Console.WriteLine(responseString);
-                Separator();
-                Separator();
+                var userResponse = JsonSerializer.Deserialize<List<UserRepos>>(responseString);
+                Separator(ConsoleColor.Yellow);
+                foreach (var repo in userResponse)
+                    repo.PrintFields();
+                Separator(ConsoleColor.Yellow);
             }
             else
             {
                 var userResponse = JsonSerializer.Deserialize<UserResponse>(responseString);
-                Separator();
+                Separator(ConsoleColor.Blue);
                 userResponse.PrintFields();
-                Separator();
+                Separator(ConsoleColor.Blue);
             }
         }
 
-        static void Separator()
+        static void Separator(ConsoleColor color)
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = color;
             for (int i = 0; i < 3; i++)
                 Console.WriteLine(separatorString);
             Console.ResetColor();
@@ -110,7 +121,8 @@ namespace GitHubExplorer
                 (new ProductInfoHeaderValue("GithubExplorer", "1.0"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue
                 ("token", token);
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Accept.Add
+                (new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
             return client;
         }
     }
