@@ -16,8 +16,8 @@ namespace LameScooter
         public async Task<int> GetScooterCountInStation(string stationName)
         {
             int result = 0;
-            var file = await File.ReadAllTextAsync("scooters.json");
-            var json = JsonSerializer.Deserialize<LameScooterStationList>(file);
+            var file = new StreamReader(Path.Combine(Environment.CurrentDirectory, "scooters.json"));
+            var json = JsonSerializer.Deserialize<LameScooterStationList>(await file.ReadToEndAsync());
             foreach (var station in json.ScooterStations)
                 if (stationName == station.name)
                     result = station.bikesAvailable;
