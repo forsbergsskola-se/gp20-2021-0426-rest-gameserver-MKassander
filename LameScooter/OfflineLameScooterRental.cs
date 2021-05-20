@@ -5,6 +5,13 @@ using System.Threading.Tasks;
 
 namespace LameScooter
 {
+    class DeprecatedLameScooterRental : ILameScooterRental
+    {
+        public Task<int> GetScooterCountInStation(string stationName)
+        {
+            throw new NotImplementedException();
+        }
+    }
     public class OfflineLameScooterRental : ILameScooterRental
     {
         public string path = "scooters.json";
