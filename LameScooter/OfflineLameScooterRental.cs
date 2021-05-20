@@ -22,8 +22,8 @@ namespace LameScooter
                     return station.bikesAvailable;
                 }
             }
-            var nf = new Exception(stationName + " is invalid");
-            throw nf;
+            var notFoundException = new Exception("Not found: " + stationName);
+            throw notFoundException;
         }
     }
 }
