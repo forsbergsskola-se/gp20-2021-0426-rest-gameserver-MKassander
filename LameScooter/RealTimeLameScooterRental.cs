@@ -10,8 +10,7 @@ namespace LameScooter
         public async Task<int> GetScooterCountInStation(string stationName)
         {
             HttpClient client = new HttpClient();
-            string url = "https://raw.githubusercontent.com/marczaku/"+
-                         "GP20-2021-0426-Rest-Gameserver/main/assignments/scooters.json";
+            string url = "https://raw.githubusercontent.com/marczaku/GP20-2021-0426-Rest-Gameserver/main/assignments/scooters.json";
 
             var getString = await client.GetStringAsync(url);
             var file = JsonSerializer.Deserialize<LameScooterStationList>(getString);
