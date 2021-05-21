@@ -28,7 +28,7 @@ namespace LameScooter
             {
                 if (stationName == station.name)
                 {
-                    Console.WriteLine($"{station.name}, available scooters:");
+                    Print.WritelineWithColor($"{station.name}, available scooters:", ConsoleColor.Cyan);
                     return station.bikesAvailable;
                 }
             }

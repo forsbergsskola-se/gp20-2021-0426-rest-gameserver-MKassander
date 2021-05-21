@@ -1,21 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace LameScooter
 {
-    public class OfflineLameScooterRental : ILameScooterRental
+    public class RealTimeLameScooterRental : ILameScooterRental
     {
-        private string path = "scooters.json";
-
         public async Task<int> GetScooterCountInStation(string stationName)
         {
-            using var sr = new StreamReader(Path.Combine(Environment.CurrentDirectory, path));
-            var file = JsonSerializer.Deserialize<LameScooterStationList>(await sr.ReadToEndAsync());
+            HttpClient client = new HttpClient();
+            string url = "https://raw.githubusercontent.com/marczaku/"+
+                         "GP20-2021-0426-Rest-Gameserver/main/assignments/scooters.json";
 
+            var getString = await client.GetStringAsync(url);
+            var file = JsonSerializer.Deserialize<LameScooterStationList>(getString);
+            
             foreach (var station in file.stations)
             {
                 if (stationName == station.name)
@@ -24,8 +24,7 @@ namespace LameScooter
                     return station.bikesAvailable;
                 }
             }
-            var notFoundException = new Exception("Not found: " + stationName);
-            throw notFoundException;
+            throw new Exception();
         }
     }
 }
