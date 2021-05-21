@@ -1,20 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace LameScooter
 {
-    class DeprecatedLameScooterRental : ILameScooterRental
-    {
-        public Task<int> GetScooterCountInStation(string stationName)
-        {
-            throw new NotImplementedException();
-        }
-    }
     public class OfflineLameScooterRental : ILameScooterRental
     {
-        public string path = "scooters.json";
+        private string path = "scooters.json";
 
         public async Task<int> GetScooterCountInStation(string stationName)
         {

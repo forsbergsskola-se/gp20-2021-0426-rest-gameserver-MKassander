@@ -8,7 +8,7 @@ namespace LameScooter
     {
         static async Task Main(string[] args)
         {
-            var rental = new OfflineLameScooterRental();
+            var rental = new DeprecatedLameScooterRental();
 
             if (args[0].Any(char.IsDigit))
                 throw  new ArgumentException("Invalid Argument");
